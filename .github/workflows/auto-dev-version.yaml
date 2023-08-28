@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          token: ${{ secrets.AUTO_DEV_VERSION }}
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.15
@@ -37,8 +38,7 @@ jobs:
 
       - name: Commit changes to CITATION.cff
         uses: EndBug/add-and-commit@v9
-        with:
-          github_token: ${{ secrets.AUTO_DEV_VERSION }}
+        with:          
           add: '["CITATION.cff", "config/default.cfg"]'
           author_name: REMIND Research Software Engineering
           author_email: rse@pik-potsdam.de
