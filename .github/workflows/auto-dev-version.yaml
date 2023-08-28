@@ -38,6 +38,7 @@ jobs:
       - name: Commit changes to CITATION.cff
         uses: EndBug/add-and-commit@v9
         with:
+          token: ${{ secrets.AUTO_DEV_VERSION }}
           add: '["CITATION.cff", "config/default.cfg"]'
           author_name: REMIND Research Software Engineering
           author_email: rse@pik-potsdam.de
