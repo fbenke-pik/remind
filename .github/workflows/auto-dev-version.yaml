@@ -9,8 +9,6 @@ jobs:
   auto-dev-version:
     if: github.repository == 'fbenke-pik/remind' && github.event.pull_request.merged == true
     runs-on: ubuntu-22.04
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
