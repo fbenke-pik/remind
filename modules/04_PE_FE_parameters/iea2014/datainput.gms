@@ -14,6 +14,10 @@ $offdelim
 /
 ;
 
+*** convert data from EJ to TWa. Do this for tall (not ttot) because the input data is yearly
+f04_IO_input(tall,regi,all_enty,all_enty2,all_te) = f04_IO_input(tall,regi,all_enty,all_enty2,all_te) * sm_EJ_2_TWa;
+
+
 *** windoffshore-todo
 *** allow input data with either "wind" or "windon" until mrremind is updated 
 f04_IO_input(tall,all_regi,"pewin","seel","windon") $ (f04_IO_input(tall,all_regi,"pewin","seel","windon") eq 0) = f04_IO_input(tall,all_regi,"pewin","seel","wind");
@@ -45,6 +49,10 @@ $include "./modules/04_PE_FE_parameters/iea2014/input/f04_IO_output.cs4r"
 $offdelim
 /
 ;
+
+*** convert data from EJ to TWa. Do this for tall (not ttot) because the input data is yearly
+f04_IO_output(tall,regi,all_enty,all_enty2,all_te) = f04_IO_output(tall,regi,all_enty,all_enty2,all_te) * sm_EJ_2_TWa;
+
 
 *** windoffshore-todo
 *** allow input data with either "wind" or "windon" until mrremind is updated 
@@ -164,10 +172,6 @@ f04_IO_output("2005",regi,"sehe","fehei","tdhei")$(p04_IO_output_beforeFix_Total
 
 
 *** end adjustment of f04_IO_output to pm_fedemand values
-
-*** convert data from EJ to TWa. Do this for tall (not ttot) because the input data is yearly
-f04_IO_input(tall,regi,all_enty,all_enty2,all_te) = f04_IO_input(tall,regi,all_enty,all_enty2,all_te) * sm_EJ_2_TWa;
-f04_IO_output(tall,regi,all_enty,all_enty2,all_te) = f04_IO_output(tall,regi,all_enty,all_enty2,all_te) * sm_EJ_2_TWa;
 
 *** copy to new parameter
 pm_IO_output(tall,regi,all_enty,all_enty2,all_te) = f04_IO_output(tall,regi,all_enty,all_enty2,all_te);

@@ -1646,9 +1646,14 @@ $offdelim
 /;
 
 pm_fedemandInd(t,regi,in) = f_fedemandInd(t,regi,"%cm_demScen%",in);
+
 *** data input for industry FE that is no part of the CES tree 
 *** needed for process-based steel implementation
 pm_fedemandInd(t,regi,ppfen_no_ces_use) = f_fedemandInd(t,regi,"%cm_demScen%",ppfen_no_ces_use);
+
+*** Convert FE items from EJ to TWa, for UE items keep original units
+pm_fedemandInd(t,regi,in)$(NOT (industry_ue_calibration_target_dyn37(in))) = pm_fedemandInd(t,regi,in) * sm_EJ_2_TWa;
+
 
 *** RCP-dependent demands in buildings (climate impact)
 Parameter 
@@ -1659,7 +1664,7 @@ $include "./core/input/f_fedemand_build.cs4r"
 $offdelim
 /;
 
-pm_fedemandBuild(t,regi,cal_ppf_buildings_dyn36) = f_fedemandBuild(t,regi,"%cm_demScen%","%cm_rcp_scen_build%",cal_ppf_buildings_dyn36);
+pm_fedemandBuild(t,regi,cal_ppf_buildings_dyn36) = f_fedemandBuild(t,regi,"%cm_demScen%","%cm_rcp_scen_build%",cal_ppf_buildings_dyn36) * sm_EJ_2_TWa;
 
 *** Scale FE demand across industry and building sectors
 $ifthen.scaleDemand not "%cm_scaleDemand%" == "off"

@@ -215,19 +215,10 @@ Execute_Loadpoint 'input' vm_deltaCap;
 pm_cesdata(t,regi,"inco","quantity") = pm_gdp(t,regi);
 pm_cesdata(t,regi,"lab","quantity") = pm_lab(t,regi);
 
-*** Load exogenous FE trajectories for buildings and industry
-*** Convert EJ to TWa
-
-pm_cesdata(t,regi,in,"quantity")$(pm_fedemandBuild(t,regi,in)) = sm_EJ_2_TWa * pm_fedemandBuild(t,regi,in)
-
-
-*** Only convert FEs from EJ to TWa, for UEs keep original units
-pm_cesdata(t,regi,in,"quantity")$(pm_fedemandInd(t,regi,in)) = 
-   pm_fedemandInd(t,regi,in)$(industry_ue_calibration_target_dyn37(in)) 
-   + sm_EJ_2_TWa * pm_fedemandInd(t,regi,in)$(NOT industry_ue_calibration_target_dyn37(in));
-
-*** Load exogenous transport demand - required for the EDGE transport module
-pm_cesdata(t,regi,in,"quantity")$p29_fedemandTransp(t,regi,"%cm_GDPpopScen%","%cm_demScen%","%cm_EDGEtr_scen%", in)
+*** Load exogenous FE trajectories for buildings, industry and transport
+pm_cesdata(t,regi,in,"quantity")$(pm_fedemandBuild(t,regi,in)) = pm_fedemandBuild(t,regi,in)
+pm_cesdata(t,regi,in,"quantity")$(pm_fedemandInd(t,regi,in)) = pm_fedemandInd(t,regi,in)
+pm_cesdata(t,regi,in,"quantity")$(p29_fedemandTransp(t,regi,"%cm_GDPpopScen%","%cm_demScen%","%cm_EDGEtr_scen%", in))
            = p29_fedemandTransp(t,regi,"%cm_GDPpopScen%","%cm_demScen%","%cm_EDGEtr_scen%", in);
 
 *** Load capital quantities
