@@ -1,4 +1,6 @@
 library(piamutils)
+library(magclass)
+library(utils)
 
 if (!exists("source_include")) {
   # Define arguments that can be read from command line
