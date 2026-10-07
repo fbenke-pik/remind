@@ -28,7 +28,8 @@ out <- remind2::convGDX2MIF(gdx,
 )
 
 write.report(out, file = remind_reporting_file, ndigit = 7)
-
 LCOE_reporting_file <- file.path(outputdir, paste0("validate_lcoe_after.mif"))
 
-remind2::convGDX2CSV_LCOE(gdx, file = LCOE_reporting_file)
+out <- reportLCOE(gdx)
+write.report(out, file = LCOE_reporting_file, ndigit = 7)
+
