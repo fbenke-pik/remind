@@ -20,17 +20,15 @@ if (!file.exists(gdx_refpolicycost)) gdx_refpolicycost <- NULL
 remind_reporting_file <- file.path(outputdir, paste0("validate_remind2_after.mif"))
 extra_data_path <- file.path(outputdir, "reporting")
 
-if (!file.exists(remind_reporting_file)) {
-  remind2::convGDX2MIF(gdx,
-                       file = remind_reporting_file,
-                       gdx_refpolicycost = gdx_refpolicycost,
-                       gdx_ref = gdx_ref,
-                       extraData = extra_data_path,
-  )
-}
+
+out <- remind2::convGDX2MIF(gdx,
+                     gdx_refpolicycost = gdx_refpolicycost,
+                     gdx_ref = gdx_ref,
+                     extraData = extra_data_path,
+)
+
+write.report(out, file = remind_reporting_file, ndigit = 7)
 
 LCOE_reporting_file <- file.path(outputdir, paste0("validate_lcoe_after.mif"))
 
-if (!file.exists(LCOE_reporting_file)) {
-  remind2::convGDX2CSV_LCOE(gdx, file = LCOE_reporting_file)
-}
+remind2::convGDX2CSV_LCOE(gdx, file = LCOE_reporting_file)

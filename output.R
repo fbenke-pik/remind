@@ -127,7 +127,7 @@ chooseSlurmConfigOutput <- function(output) {
     slurm_options <- grep("--mem=[0-9]*[0-9]{3}", slurm_options, value = TRUE)
   } else if ("fixOnRef" %in% output && length(output) == 1) {
     slurm_options <- c("direct", slurm_options)
-  } else if (any(c("validateReporting", "validateReportingAfter") %in% output)) {
+  } else if (any(c("validateReportingNew", "validateReportingBefore") %in% output)) {
     slurm_options <- grep("--mem=[0-9]*[0-9]{3}", slurm_options, value = TRUE)
     slurm_options <- c("direct", slurm_options)
   }
