@@ -13,7 +13,8 @@ a <- read.report(file.path(outputdir, "validate_remind2_before.mif"), as.list = 
 b <- read.report(file.path(outputdir, "validate_remind2_after.mif"), as.list = FALSE)
 piamutils::compareMagpieObject(a, b)
 
-a <- read.csv(file.path(outputdir, "validate_lcoe_before.mif"), sep = ";")
-b <- read.csv(file.path(outputdir, "validate_lcoe_after.mif"), sep = ";")
-piamutils::compareMagpieObject(as.magpie(a), as.magpie(b))
-
+a <- read.report("~/Cluster/validate_lcoe_before.mif", as.list = FALSE) %>%
+  collapseDim(dim = c("model", "scenario"))
+b <- read.report("~/Cluster/validate_lcoe_after.mif", as.list = FALSE) %>%
+  collapseDim(dim = c("model", "scenario"))
+diffs <- piamutils::compareMagpieObject(a, b)
