@@ -96,8 +96,8 @@ f04_IO_output("2005",regi,"seliqbio","fehob","tdbiohob")$(p04_IO_output_beforeFi
 f04_IO_output("2005",regi,"seliqfos","fehob","tdfoshob")$(p04_IO_output_beforeFix_Total("2005",regi,"fehob")) = p04_IO_output_beforeFix("2005",regi,"seliqfos","fehob","tdfoshob") * pm_fedemandBuild("2005",regi,"fehob")/p04_IO_output_beforeFix_Total("2005",regi,"fehob");
 
 *** adjust buildings gases
-f04_IO_output("2005",regi,"segabio","fegab","tdbiogab")$(p04_IO_output_beforeFix_Total("2005",regi,"fegab")) = p04_IO_output_beforeFix("2005",regi,"segaqbio","fegab","tdbiogab") * pm_fedemandBuild("2005",regi,"fehob")/p04_IO_output_beforeFix_Total("2005",regi,"fegab");
-f04_IO_output("2005",regi,"segafos","fegab","tdfosgab")$(p04_IO_output_beforeFix_Total("2005",regi,"fegab")) = p04_IO_output_beforeFix("2005",regi,"segafos","fegab","tdfosgab") * pm_fedemandBuild("2005",regi,"fehob")/p04_IO_output_beforeFix_Total("2005",regi,"fegab");
+f04_IO_output("2005",regi,"segabio","fegab","tdbiogab")$(p04_IO_output_beforeFix_Total("2005",regi,"fegab")) = p04_IO_output_beforeFix("2005",regi,"segabio","fegab","tdbiogab") * pm_fedemandBuild("2005",regi,"fegab")/p04_IO_output_beforeFix_Total("2005",regi,"fegab");
+f04_IO_output("2005",regi,"segafos","fegab","tdfosgab")$(p04_IO_output_beforeFix_Total("2005",regi,"fegab")) = p04_IO_output_beforeFix("2005",regi,"segafos","fegab","tdfosgab") * pm_fedemandBuild("2005",regi,"fegab")/p04_IO_output_beforeFix_Total("2005",regi,"fegab");
 
 *** industry solids
 p04_IO_output_beforeFix_Total(t,regi,"fesoi") = p04_IO_output_beforeFix(t,regi,"sesobio","fesoi","tdbiosoi")
