@@ -73,9 +73,6 @@ f04_IO_output(tall,regi,entyPe,entySe,te)$(f04_IO_output(tall,regi,entyPe,entySe
 
 
 *** making sure f04_IO_output is compatible with pm_fedemand values in 2005  
-*** this will become irrelevant to the model once the input data routines can be fixed so that pm_fedemand is again the same as f04_IO_output
-*** these lines should be removed once this is fixed at mrremind side.
-
 
 *** save original input data
 p04_IO_output_beforeFix(t,regi,all_enty,all_enty2,all_te) = f04_IO_output(t,regi,all_enty,all_enty2,all_te);
@@ -85,6 +82,10 @@ p04_IO_output_beforeFix_Total(t,regi,"fesob") = p04_IO_output_beforeFix(t,regi,"
 
 p04_IO_output_beforeFix_Total(t,regi,"fehob") = p04_IO_output_beforeFix(t,regi,"seliqbio","fehob","tdbiohob")
                                                   + p04_IO_output_beforeFix(t,regi,"seliqfos","fehob","tdfoshob");
+                                                  
+p04_IO_output_beforeFix_Total(t,regi,"fegab") = p04_IO_output_beforeFix(t,regi,"segabio","febab","tdbiogab")
+                                                  + p04_IO_output_beforeFix(t,regi,"segafos","fegab","tdfosgab");
+                                                  
 
 *** adjust buildings solids
 f04_IO_output("2005",regi,"sesobio","fesob","tdbiosob")$(p04_IO_output_beforeFix_Total("2005",regi,"fesob")) = p04_IO_output_beforeFix("2005",regi,"sesobio","fesob","tdbiosob") * pm_fedemandBuild("2005",regi,"fesob")/p04_IO_output_beforeFix_Total("2005",regi,"fesob");
@@ -94,6 +95,9 @@ f04_IO_output("2005",regi,"sesofos","fesob","tdfossob")$(p04_IO_output_beforeFix
 f04_IO_output("2005",regi,"seliqbio","fehob","tdbiohob")$(p04_IO_output_beforeFix_Total("2005",regi,"fehob")) = p04_IO_output_beforeFix("2005",regi,"seliqbio","fehob","tdbiohob") * pm_fedemandBuild("2005",regi,"fehob")/p04_IO_output_beforeFix_Total("2005",regi,"fehob");
 f04_IO_output("2005",regi,"seliqfos","fehob","tdfoshob")$(p04_IO_output_beforeFix_Total("2005",regi,"fehob")) = p04_IO_output_beforeFix("2005",regi,"seliqfos","fehob","tdfoshob") * pm_fedemandBuild("2005",regi,"fehob")/p04_IO_output_beforeFix_Total("2005",regi,"fehob");
 
+*** adjust buildings gases
+f04_IO_output("2005",regi,"segabio","fegab","tdbiogab")$(p04_IO_output_beforeFix_Total("2005",regi,"fegab")) = p04_IO_output_beforeFix("2005",regi,"segaqbio","fegab","tdbiogab") * pm_fedemandBuild("2005",regi,"fehob")/p04_IO_output_beforeFix_Total("2005",regi,"fegab");
+f04_IO_output("2005",regi,"segafos","fegab","tdfosgab")$(p04_IO_output_beforeFix_Total("2005",regi,"fegab")) = p04_IO_output_beforeFix("2005",regi,"segafos","fegab","tdfosgab") * pm_fedemandBuild("2005",regi,"fehob")/p04_IO_output_beforeFix_Total("2005",regi,"fegab");
 
 *** industry solids
 p04_IO_output_beforeFix_Total(t,regi,"fesoi") = p04_IO_output_beforeFix(t,regi,"sesobio","fesoi","tdbiosoi")
