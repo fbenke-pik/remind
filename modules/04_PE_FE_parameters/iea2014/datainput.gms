@@ -83,7 +83,7 @@ p04_IO_output_beforeFix_Total(t,regi,"fesob") = p04_IO_output_beforeFix(t,regi,"
 p04_IO_output_beforeFix_Total(t,regi,"fehob") = p04_IO_output_beforeFix(t,regi,"seliqbio","fehob","tdbiohob")
                                                   + p04_IO_output_beforeFix(t,regi,"seliqfos","fehob","tdfoshob");
                                                   
-p04_IO_output_beforeFix_Total(t,regi,"fegab") = p04_IO_output_beforeFix(t,regi,"segabio","febab","tdbiogab")
+p04_IO_output_beforeFix_Total(t,regi,"fegab") = p04_IO_output_beforeFix(t,regi,"segabio","fegab","tdbiogab")
                                                   + p04_IO_output_beforeFix(t,regi,"segafos","fegab","tdfosgab");
                                                   
 
