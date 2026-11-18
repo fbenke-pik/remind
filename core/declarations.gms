@@ -198,7 +198,7 @@ q_emiGHG_exclLULUCF_exclBunkers(ttot,all_regi)       "calculate total GHG emissi
 parameters
 
 *** general technoeconomic parameters
-pm_eta_conv(tall,all_regi,all_te)                    "conversion efficiency of all energy technologies, only applying to technologies that do not have explicit time-dependant conversion efficiencies, still eta converges until 2050 to dataglob_values. [efficiency (0..1)]"
+pm_eta_conv(tall,all_regi,all_te)                    "conversion efficiency of all energy technologies, only applying to technologies that do not have explicit time-dependant conversion efficiencies, still eta converges until 2050 to dataglob_values. [efficiency (0..1), nuclear: TWa_elec/Mt_Ur]"
 pm_dataeta(tall,all_regi,all_te)                     "read-in parameter for conversion efficiency of technologies that vary exogenously over time based on generisdata_varying_eta.prn file [efficiency (0..1)]"
 pm_data(all_regi,char,all_te)                        "Large array for most technical parameters of technologies, more detail on the individual technical parameters and their units can be found in the declaration of the set 'char' "
 pm_cf(tall,all_regi,all_te)                          "read-in parameter for capacity factor (fraction of the year that a plant is running) [share]"
@@ -221,9 +221,15 @@ p_oldFloorCostdata(all_regi,all_te)                  "print old floor cost data 
 pm_tsu2opTimeYr(ttot,opTimeYr)                       "auxiliary parameter to map time steps to past time steps: counts the number of model timesteps between years ttot-opTimeYr and ttot, used for q_transPe2se and q_cap equations [unitless]" 
 
 *** parameters used for endogenous technology learning implementation
-pm_capCum0(tall,all_regi,all_te)                     "Total cumulated capacity of learning technologies from last iteration used for learning curves based on vm_capCum [TW]"
-p_capCum(tall, all_regi,all_te)                      "Total cumulated capacity of learning technologies from input.gdx used for learning curves based on vm_capCum [TW]"
-pm_capCumForeign(ttot,all_regi,all_te)               "Total cumulated capacity of learning technologies of all other regions except regi [TW]"
+pm_capCum0(tall,all_regi,all_te)                     "Total cumulated capacity of learning technologies from last iteration used for learning curves based on vm_capCum [TW] or [GtC/yr]"
+p_capCum(tall, all_regi,all_te)                      "Total cumulated capacity of learning technologies from input.gdx used for learning curves based on vm_capCum [TW] or [GtC/yr]"
+pm_capCumForeign(ttot,all_regi,all_te)               "Total cumulated capacity of learning technologies of all other regions except regi [TW] or [GtC/yr]"
+p_learnDeltaGlob(all_te)                              "Investment costs that can be reduced through learning = inco0 - floorcost. Unit: $/kW"
+p_learnDeltaRegi(all_regi,all_te)                     "Investment costs that can be reduced through learning = inco0 - floorcost, based on regional investment costs. Unit: $/kW"
+p_learnExpGlob(all_te)                               "exponent in learning equation, based on global data"
+p_learnMultGlob(all_te)                              "multiplicative parameter in learning equation, based on global data"
+p_learnExpRegi(all_regi,all_te)                       "exponent in learning equation, based on regional investment costs"
+p_learnMultRegi(all_regi,all_te)                      "multiplicative parameter in learning equation, based on regional investment costs"
 
 *** early retirement parameters
 pm_regiEarlyRetiRate(ttot,all_regi,all_te)           "regional early retirement rate, maximum allowed annual increase in the share of early retired capacity of a technology for which early retirement is allowed [1/year]"
@@ -328,7 +334,7 @@ $if not "%c_scaleDemandIndTable%" == "off"    p_scaleDemandIndTable(ttot, all_re
 pm_FEPrice(ttot,all_regi,all_enty,sector,emiMkt)     "parameter to capture all FE prices across sectors and markets [tr$2017/TWa]"
 pm_FEPrice_iter(iteration,ttot,all_regi,all_enty,sector,emiMkt) "parameter to capture all FE prices across sectors and markets [tr$2017/TWa] across iterations"
 pm_SEPrice(ttot,all_regi,all_enty)                   "parameter to capture all SE prices [tr$2017/TWa]"
-pm_PEPrice(ttot,all_regi,all_enty)                   "parameter to capture all PE prices [tr$2017/TWa]"
+pm_PEPrice(ttot,all_regi,all_enty)                   "parameter to capture all PE prices [tr$2017/TWa, Uranium: tr$2017/Mt_Ur]"
 
 p_FEPrice_by_SE_Sector_EmiMkt(ttot,all_regi,entySe,all_enty,sector,emiMkt) "parameter to save FE price per SE, sector and emission market [tr$2017/TWa]"
 p_FEPrice_by_Sector_EmiMkt(ttot,all_regi,all_enty,sector,emiMkt) "parameter to save FE marginal price per sector and emission market [tr$2017/TWa]"
@@ -753,23 +759,32 @@ sm_tgch4_2_pgc = s_gwpCH4 * (12/44) * 0.001;
 ***   Suppose we have a subsidy that we want to phase out with a different date for each region.
 ***   p_subsidy(t,regi) = macro_interpolate(t.val, cm_startyear, p_subsidyEndYr(regi), p_subsidy(cm_startyear,regi), 0);
 *** Outside t0 and t1, the linear function is continued
-*** x0 _|         /
+*** x1 _|         /
 ***     |        /
 ***     |       /
-*** x1 _|      /
+*** x0 _|      /
 ***     |_____/___________
 ***            | |
 ***          t0  t1
 $macro macro_interpolate(t,t0,t1,x0,x1) ( ((t1) - (t)) / ((t1) - (t0)) * (x0) + ((t) - (t0)) / ((t1) - (t0)) * (x1) )
 
 *** macro_clamped_interpolate: Like macro_interpolate, but if t is not between t0 and t1, we return the respective boundary value
-*** x0 _|         _____
+*** x1 _|         _____
 ***     |        /
 ***     |       /
-*** x1 _|______/
+*** x0 _|______/
 ***     |________________
 ***            | |
 ***          t0  t1
 $macro macro_clamped_interpolate(t, t0, t1, x0, x1) ( (x0)$((t) <= (t0)) + (x1)$((t) >= (t1)) + ((x0) + ((x1) - (x0)) * ((t) - (t0)) / ((t1) - (t0)))$(((t) > (t0)) AND ((t) < (t1))))
+
+*** macro_runtimeLog: write one line with the current wall-clock time to runtime.log, followed
+*** by a label and the iteration number, so that the runtime of individual model parts can be
+*** reconstructed (see scripts/output/plotRuntime.R), e.g.:
+***   macro_runtimeLog("GAMS")
+***   macro_runtimeLog("run_KotzWenz_damages")
+*** Make sure the label contains no commas.
+*** Format of runtime.log: time, label, iteration
+$macro macro_runtimeLog(label) putclose runtime gyear(jnow):0:0 "-" gmonth(jnow):0:0 "-" gday(jnow):0:0 " " ghour(jnow):0:0 ":" gminute(jnow):0:0 ":" gsecond(jnow):0:0 ",",label,"," iteration.val:0;
 
 *** EOF ./core/declarations.gms
